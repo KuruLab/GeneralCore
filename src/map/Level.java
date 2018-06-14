@@ -142,6 +142,9 @@ public class Level {
         this.boss = boss;
     }
     
-    
+    @Override
+    public String toString(){
+        return id+" - T: "+tier;
+    }
     
 }

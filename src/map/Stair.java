@@ -70,4 +70,8 @@ public class Stair {
         this.to = to;
     }
     
+    @Override
+    public String toString(){
+        return id;
+    }
 }

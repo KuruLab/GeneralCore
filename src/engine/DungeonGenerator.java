@@ -33,46 +33,62 @@ import puzzle.Symbol;
  *
  * @author Kurumin
  */
-public class DungeonGenerator implements Runnable{    
+public class DungeonGenerator implements Runnable{   
+    
+    public static final int
+            RANDOM_LINE = 1,
+            RANDOM_TREE = 2;
     
     public static String folder = "." + File.separator + "data" + File.separator + "dungeons" + File.separator + "";
+    
     private String dungeonName;
-    private int maxTiers = 1;
-            
+    private int maxTiers;
+    private int method;
+    private boolean finished = false;
+    
+    private Dungeon generatedDungeon;
+
+    public DungeonGenerator(String dungeonName, int maxTiers, int method) {
+        this.dungeonName = dungeonName;
+        this.maxTiers = maxTiers;
+        this.method = method;
+    }
+    
     @Override
     public void run() {
+        finished = false;
+        switch(method){
+            case DungeonGenerator.RANDOM_LINE:
+                randomLineGenerator();
+                break;
+            case DungeonGenerator.RANDOM_TREE:
+                randomTreeGenerator();
+                break;    
+            default:
+                randomLineGenerator();
+        }
+        finished = true;
+    }
+    
+    private void randomLineGenerator(){
         List<Level> levelList = getAllLevelsList();
         Collections.shuffle(levelList);
         
-        Dungeon dungeon = new Dungeon(dungeonName);
+        generatedDungeon = new Dungeon(dungeonName);
         
         int currentTier = 1;
+        Tree<Level> tree = null;
         while(currentTier <= maxTiers && !levelList.isEmpty()){
             
-            if(currentTier > 1){
-                // adjust the level stair to allow backtrack
-            }
-            
             Level level = levelList.remove(0);
-            System.out.println("Working on "+level.getId());
-            level.setTier(currentTier);
-            
-            Room bossRoom = level.getBoss();
-            System.out.println("Room "+bossRoom.getId()+" is the boss.");
-            Condition condition = bossRoom.getCondition();
-            Symbol stairsKey = new Symbol(condition.getKeyLevel()+1);
-            bossRoom.addSymbol(stairsKey);
-            
-            Room stairsRoom = new Room("s");
-            stairsRoom.setCondition(new Condition(stairsKey));
-            
-            Door toStairs = new Door("to stairs");
-            toStairs.setA(bossRoom);
-            toStairs.setB(stairsRoom);
-            toStairs.setCondition(new Condition(stairsKey));
-            
-            bossRoom.addDoor(toStairs);
-            stairsRoom.addDoor(toStairs);
+            level.setTier(currentTier);  
+            System.out.println("Adding "+level.getId()+" to the dungeon.");
+            if(currentTier == 1){
+                tree = new Tree<>(level);
+            }
+            else{
+                tree = tree.setAsParent(level);
+            }
             
             if(levelList.isEmpty()){
                 System.out.println("No more levels.");
@@ -80,17 +96,15 @@ public class DungeonGenerator implements Runnable{
             else if(currentTier == maxTiers){
                 System.out.println("No more tiers.");
             }
-            else{
-                Level nextLevel = levelList.get(0);
-                Stair stair = new Stair(level.getId()+" - "+nextLevel.getId());
-                stair.setLower(nextLevel);
-                stair.setUpper(level);
-                stair.setFrom(stairsRoom);
-                stair.setTo(nextLevel.getStart()); // fix this
-                level.addStair(stair);
-            }
             currentTier++;
         }
+        generatedDungeon.setLevels(tree);
+        fixDungeonStairs(generatedDungeon);
+        System.out.println(generatedDungeon);
+    }
+    
+    private void randomTreeGenerator(){
+        // not today...
     }
     
     private List<Level> getAllLevelsList(){
@@ -119,6 +133,106 @@ public class DungeonGenerator implements Runnable{
             }
         }
         return levelList;
+    }
+    
+    public void fixDungeonStairs(Dungeon dungeon){
+        Tree<Level> tree = dungeon.getLevels();
+        recursiveFix(tree);
+    }
+    
+    private void recursiveFix(Tree<Level> tree){
+        Level level = tree.getHead();
+        System.out.println("Fixing "+level.getId());
+        
+        Tree<Level> parentTree = tree.getParent();
+        if(parentTree != null){ // if is not the root
+            Level parent = parentTree.getHead();
+            
+            Room bossRoom = level.getBoss();
+            System.out.println("Room "+level.getStart().getId()+" is the start.");
+            System.out.println("Room "+bossRoom.getId()+" is the boss.");
+            
+            // add the key to stairs
+            Condition condition = bossRoom.getCondition();
+            Symbol stairsKey = new Symbol(condition.getKeyLevel()+1);
+            bossRoom.addSymbol(stairsKey);
+            
+            // create a new room -> add the stairs room
+            Room stairsRoom = new Room("s");
+            stairsRoom.setCondition(new Condition(stairsKey));
+            
+            // link the rooms with a door
+            Door toStairs = new Door("to stairs");
+            toStairs.setA(bossRoom);
+            toStairs.setB(stairsRoom);
+            toStairs.setCondition(new Condition(stairsKey));
+            bossRoom.addDoor(toStairs);
+            stairsRoom.addDoor(toStairs);
+            
+            // create the stairs linking the levels
+            Stair stair = new Stair("\""+level.getId()+"\":\""+stairsRoom.getId()+"\", \""+parent.getId()+"\":\""+parent.getStart().getId()+"\"");
+            stair.setLower(level);
+            stair.setUpper(parent);
+            stair.setFrom(stairsRoom);
+            stair.setTo(parent.getStart()); // fix this latter?
+            level.addStair(stair);
+            parent.addStair(stair);
+            System.out.println("Stair created: "+stair);
+        }
+        for(Tree<Level> leaf : tree.getSubTrees()){
+            recursiveFix(leaf);
+        }
+        
+        
+
+        
+
+        
+
+        
+                
+                
+        
+    }
+
+    public String getDungeonName() {
+        return dungeonName;
+    }
+
+    public void setDungeonName(String dungeonName) {
+        this.dungeonName = dungeonName;
+    }
+
+    public int getMaxTiers() {
+        return maxTiers;
+    }
+
+    public void setMaxTiers(int maxTiers) {
+        this.maxTiers = maxTiers;
+    }
+
+    public int getMethod() {
+        return method;
+    }
+
+    public void setMethod(int method) {
+        this.method = method;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    public Dungeon getGeneratedDungeon() {
+        return generatedDungeon;
+    }
+
+    public void setGeneratedDungeon(Dungeon generatedDungeon) {
+        this.generatedDungeon = generatedDungeon;
     }
     
 }

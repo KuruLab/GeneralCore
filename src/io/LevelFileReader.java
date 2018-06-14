@@ -37,44 +37,10 @@ import puzzle.Symbol;
  *
  * @author Kurumin
  */
-public class LevelFileReader {
-    
-    private String filename;
+public class LevelFileReader extends RawFileReader{
     
     public LevelFileReader(String _filename){
-        this.filename = _filename;
-    }
-    
-    private String readRawString(){
-        String jsonString = new String();
-        FileReader fr = null;
-        BufferedReader br = null;
-        System.out.println("Reading \""+filename+"\"");
-        try {
-            File file = new File(filename);
-            fr = new FileReader(file);
-            br = new BufferedReader(fr);
-            String line = new String();
-            try {
-                do{
-                    line = br.readLine();
-                    if(line != null){
-                        jsonString += line;
-                    }
-                } while(line != null);
-            } catch (IOException ex) {
-                Logger.getLogger(getClass().getName(), ex.getMessage());
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(getClass().getName(), ex.getMessage());
-        } finally {
-            try {
-                fr.close();
-            } catch (IOException ex) {
-                Logger.getLogger(getClass().getName(), ex.getMessage());
-            }
-        }
-        return jsonString;
+        super(_filename);
     }
     
     public Level parseJson(){

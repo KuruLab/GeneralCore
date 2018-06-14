@@ -1,6 +1,11 @@
 
 import engine.DungeonGenerator;
 import engine.LevelGenerator;
+import io.DungeonFileReader;
+import io.DungeonFileWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import map.Dungeon;
 
 /*
  * Copyright (C) 2018 Kurumin
@@ -26,12 +31,30 @@ import engine.LevelGenerator;
 public class TestDungeonGenerator {
     
     public static void main(String args[]){
-        
-        LevelGenerator.folder = "D:\\Kurumin\\Documents\\NetBeansProjects\\TIoDClient\\data\\levels\\";
-        DungeonGenerator.folder = "D:\\Kurumin\\Documents\\NetBeansProjects\\TIoDClient\\data\\dungeons\\";
-        
-        DungeonGenerator dg = new DungeonGenerator();
-        Thread thread = new Thread(dg);
-        thread.start();
+        try {
+            LevelGenerator.folder = "D:\\Kurumin\\Documents\\NetBeansProjects\\TIoDClient\\data\\levels\\";
+            DungeonGenerator.folder = "D:\\Kurumin\\Documents\\NetBeansProjects\\TIoDClient\\data\\dungeons\\";
+            
+            String dungeonID = "Testing Dungeon";
+            
+            DungeonGenerator dg = new DungeonGenerator(dungeonID, 3, DungeonGenerator.RANDOM_LINE);
+            Thread thread = new Thread(dg);
+            thread.start();
+            thread.join();
+            
+            Dungeon dungeon = dg.getGeneratedDungeon();
+            DungeonFileWriter dfw = new DungeonFileWriter(dungeon);
+            
+            String path = DungeonGenerator.folder + dungeon.getId()+".json";
+            
+            dfw.exportJSONData(path);
+            
+            DungeonFileReader dfr = new DungeonFileReader(path);
+            Dungeon readDungeon = dfr.parseJson();
+            System.out.println(readDungeon);
+            
+        } catch (InterruptedException ex) {
+            Logger.getLogger(TestDungeonGenerator.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

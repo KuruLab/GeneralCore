@@ -16,7 +16,7 @@
  */
 package map;
 
-import java.util.List;
+import engine.Tree;
 
 /**
  *
@@ -25,10 +25,11 @@ import java.util.List;
 public class Dungeon {
     
     private String id;
-    private List<Level> levels;
+    private Tree<Level> levels;
 
     public Dungeon(String id) {
         this.id = id;
+        this.levels = new Tree<>(null);
     }
 
     public String getId() {
@@ -39,11 +40,15 @@ public class Dungeon {
         this.id = id;
     }
 
-    public List<Level> getLevels() {
+    public Tree<Level> getLevels() {
         return levels;
     }
 
-    public void setLevels(List<Level> levels) {
+    public void setLevels(Tree<Level> levels) {
         this.levels = levels;
+    }
+    
+    public String toString(){
+        return "Dungeon: "+id+"\n"+levels.toString();
     }
 }
