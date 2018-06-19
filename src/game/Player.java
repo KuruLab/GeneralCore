@@ -8,7 +8,8 @@ public class Player {
 
     private String name;
 
-    public Player() {
+    public Player(String _name) {
+        this.name = _name;
     }
 
     public String getName() {

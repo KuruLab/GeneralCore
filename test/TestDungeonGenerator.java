@@ -32,12 +32,14 @@ public class TestDungeonGenerator {
     
     public static void main(String args[]){
         try {
-            LevelGenerator.folder = "D:\\Kurumin\\Documents\\NetBeansProjects\\TIoDClient\\data\\levels\\";
-            DungeonGenerator.folder = "D:\\Kurumin\\Documents\\NetBeansProjects\\TIoDClient\\data\\dungeons\\";
+            LevelGenerator.folder = "..\\TIoDClient\\data\\levels\\";
+            DungeonGenerator.folder = "..\\TIoDClient\\data\\dungeons\\";
+            
+            int maxTiers = 3; // maximum number of tiers
             
             String dungeonID = "Testing Dungeon";
             
-            DungeonGenerator dg = new DungeonGenerator(dungeonID, 3, DungeonGenerator.RANDOM_LINE);
+            DungeonGenerator dg = new DungeonGenerator(dungeonID, maxTiers, DungeonGenerator.RANDOM_LINE);
             Thread thread = new Thread(dg);
             thread.start();
             thread.join();
@@ -45,7 +47,7 @@ public class TestDungeonGenerator {
             Dungeon dungeon = dg.getGeneratedDungeon();
             DungeonFileWriter dfw = new DungeonFileWriter(dungeon);
             
-            String path = DungeonGenerator.folder + dungeon.getId()+".json";
+            String path = DungeonGenerator.folder + dungeon.getId() + ".json";
             
             dfw.exportJSONData(path);
             
