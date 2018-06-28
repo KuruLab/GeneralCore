@@ -4,14 +4,18 @@ package game;
  *
  * @author Kurumin
  */
-public class Player {
+public class CorePlayer {
 
     private String name;
-
-    public Player(String _name) {
+    
+    public CorePlayer() {
+        this.name = "Unamed Player";
+    }
+    
+    public CorePlayer(String _name) {
         this.name = _name;
     }
-
+    
     public String getName() {
         return name;
     }
