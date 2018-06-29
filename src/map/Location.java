@@ -16,53 +16,49 @@
  */
 package map;
 
-import engine.Tree;
-import java.util.HashMap;
-import java.util.List;
+import java.io.Serializable;
 
 /**
  *
  * @author Kurumin
  */
-public class Dungeon {
-    
-    private String id;
-    private Tree<Level> levels;
-    private HashMap<Integer, List<Level>> tierMap;
+public class Location implements Serializable{
+    private Dungeon dungeon;
+    private Level level;
+    private Room room;
 
-    public Dungeon(String id) {
-        this.id = id;
-        this.levels = new Tree<>(null);
-        this.tierMap = new HashMap<>();
+    public Location(Dungeon dungeon, Level level, Room room) {
+        this.dungeon = dungeon;
+        this.level = level;
+        this.room = room;
     }
 
-    public String getId() {
-        return id;
+    public Dungeon getDungeon() {
+        return dungeon;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDungeon(Dungeon dungeon) {
+        this.dungeon = dungeon;
     }
 
-    public Tree<Level> getLevels() {
-        return levels;
+    public Level getLevel() {
+        return level;
     }
 
-    public void setLevels(Tree<Level> levels) {
-        this.levels = levels;
+    public void setLevel(Level level) {
+        this.level = level;
     }
 
-    public HashMap<Integer, List<Level>> getTierMap() {
-        return tierMap;
+    public Room getRoom() {
+        return room;
     }
 
-    public void setTierMap(HashMap<Integer, List<Level>> tierMap) {
-        this.tierMap = tierMap;
+    public void setRoom(Room room) {
+        this.room = room;
     }
     
     @Override
     public String toString(){
-        return "Dungeon: "+id+"\n"+levels.toString();
+        return dungeon.getId()+", "+level.getId()+", "+room.getId();
     }
-    
 }

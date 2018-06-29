@@ -19,7 +19,9 @@ package io;
 import engine.LevelGenerator;
 import engine.Tree;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 import map.Dungeon;
 import map.Level;
@@ -75,6 +77,9 @@ public class DungeonFileReader extends RawFileReader {
                 
                 Long tier = ((Long) levelObj.get("tier"));
                 level.setTier(tier.intValue());
+                List<Level> tierMapping = dungeon.getTierMap().getOrDefault(tier.intValue(), new ArrayList<>());
+                tierMapping.add(level);
+                dungeon.getTierMap().putIfAbsent(tier.intValue(), tierMapping);
                 
                 JSONArray leafArray = (JSONArray) obj.get("leafs");
                 if(leafArray != null){

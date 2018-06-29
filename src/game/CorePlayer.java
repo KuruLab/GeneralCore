@@ -1,5 +1,9 @@
 package game;
 
+import map.Level;
+import map.Location;
+import map.Room;
+
 /**
  *
  * @author Kurumin
@@ -7,9 +11,12 @@ package game;
 public class CorePlayer {
 
     private String name;
+    private Location location;
+    private Iventory iventory;
     
     public CorePlayer() {
         this.name = "Unamed Player";
+        this.iventory = new Iventory(this);
     }
     
     public CorePlayer(String _name) {
@@ -22,6 +29,22 @@ public class CorePlayer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Iventory getIventory() {
+        return iventory;
+    }
+
+    public void setIventory(Iventory iventory) {
+        this.iventory = iventory;
     }
     
     @Override
