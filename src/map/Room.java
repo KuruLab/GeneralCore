@@ -37,6 +37,9 @@ public class Room {
     private List<Symbol> symbols;
     private Condition condition;
     private double intensity;
+    
+    private String lore;
+    private String info;
 
     public Room(String id) {
         this.id = id;
@@ -134,7 +137,20 @@ public class Room {
     public void setIntensity(double intensity) {
         this.intensity = intensity;
     }
-    
-    
-    
+
+    public String getLore() {
+        return lore;
+    }
+
+    public void setLore(String lore) {
+        this.lore = lore;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
 }

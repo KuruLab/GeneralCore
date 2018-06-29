@@ -11,7 +11,7 @@ import map.Room;
 public class CorePlayer {
 
     private String name;
-    private Location location;
+    private Location location, previous;
     private Iventory iventory;
     
     public CorePlayer() {
@@ -20,6 +20,7 @@ public class CorePlayer {
     }
     
     public CorePlayer(String _name) {
+        this();
         this.name = _name;
     }
     
@@ -37,6 +38,14 @@ public class CorePlayer {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Location getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(Location previous) {
+        this.previous = previous;
     }
 
     public Iventory getIventory() {
