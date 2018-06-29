@@ -40,6 +40,7 @@ public class Room {
     
     private String lore;
     private String info;
+    private String firstTimeText;
 
     public Room(String id) {
         this.id = id;
@@ -49,6 +50,9 @@ public class Room {
         symbols = new ArrayList<>();
         condition = new Condition();
         intensity = 0.0;
+        lore = "";
+        info = "";
+        firstTimeText = "";
     }
 
     public int getIndex() {
@@ -152,5 +156,13 @@ public class Room {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public String getFirstTimeText() {
+        return firstTimeText;
+    }
+
+    public void setFirstTimeText(String firstTimeText) {
+        this.firstTimeText = firstTimeText;
     }
 }

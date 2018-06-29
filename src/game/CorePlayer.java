@@ -12,11 +12,11 @@ public class CorePlayer {
 
     private String name;
     private Location location, previous;
-    private Iventory iventory;
+    private Inventory inventory;
     
     public CorePlayer() {
         this.name = "Unamed Player";
-        this.iventory = new Iventory(this);
+        this.inventory = new Inventory(this);
     }
     
     public CorePlayer(String _name) {
@@ -48,12 +48,12 @@ public class CorePlayer {
         this.previous = previous;
     }
 
-    public Iventory getIventory() {
-        return iventory;
+    public Inventory getInventory() {
+        return inventory;
     }
 
-    public void setIventory(Iventory iventory) {
-        this.iventory = iventory;
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
     
     @Override

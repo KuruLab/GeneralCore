@@ -16,16 +16,10 @@
  */
 package io;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.logging.Logger;
 import map.Door;
 import map.Room;
 import map.Level;
-import map.Stair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -65,6 +59,9 @@ public class LevelFileReader extends RawFileReader{
                 Double itnsty = (Double) nodeObj.get("intensity");
                 String symbol = (String) nodeObj.get("symbol");
                 String cond = (String) nodeObj.get("condition");
+                String lore = (String) nodeObj.get("lore");
+                String info = (String) nodeObj.get("info");
+                String firstTime = (String) nodeObj.get("first_time");
                 JSONArray pos = (JSONArray) nodeObj.get("position");
                 
                 Double x = (Double) pos.get(0);
@@ -80,6 +77,9 @@ public class LevelFileReader extends RawFileReader{
                 room.setIntensity(itnsty);
                 room.addSymbol(sym);
                 room.setCondition(con);
+                room.setLore(lore);
+                room.setInfo(info);
+                room.setFirstTimeText(firstTime);
                 
                 improveLevelSymbols(sym, room, level);
                 level.addRoom(room);

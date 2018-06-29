@@ -24,12 +24,12 @@ import puzzle.Symbol;
  *
  * @author Kurumin
  */
-public class Iventory {
+public class Inventory {
     
     private CorePlayer player;
     private List<Symbol> symbols;
     
-    public Iventory(CorePlayer owner) {
+    public Inventory(CorePlayer owner) {
         this.player = owner;
         this.symbols = new ArrayList<>();
     }
