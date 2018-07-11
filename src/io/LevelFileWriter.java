@@ -1,7 +1,5 @@
 package io;
 
-import graphstream.*;
-import evoGraph.Config;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -32,7 +30,7 @@ public class LevelFileWriter {
         this.levelName = lvlName;
     }
 
-    public void exportDataJSON(String filename, String generator, int width, int height, boolean useHash) {
+    public void exportDataJSON(String filename, String generator, int width, int height, int border, boolean useHash) {
         /*{"border":5,"random_seed":false,"method":"random seed cellular automata","seed":"666","size":"128x64","wall_threshold":25,"room_threshold":75,"type":"cave","fill_percent":50,"smooth":5}*/
         try {
             PrintWriter pw = new PrintWriter(filename);
@@ -46,7 +44,7 @@ public class LevelFileWriter {
             pw.printf("\"type\": \"evo-dungeon\",%n");
             pw.printf("\"method\": \"%s\",%n", generator);
             pw.printf("\"size\": \"%sx%s\",%n", width, height);
-            pw.printf("\"border\": \"%s\",%n", Config.borderSize);
+            pw.printf("\"border\": \"%s\",%n", border);
             pw.printf("\"fill_percent\": %s,%n", 0);
             pw.printf("\"wall_threshold\": %s,%n", 0);
             pw.printf("\"room_threshold\": %s,%n", 0);

@@ -16,7 +16,6 @@
  */
 package io;
 
-import engine.LevelGenerator;
 import engine.Tree;
 import java.io.File;
 import java.util.ArrayList;
@@ -38,8 +37,8 @@ public class DungeonFileReader extends RawFileReader {
     
     private HashMap<String, Level> loadedLevels;
     
-    public DungeonFileReader(String _filename) {
-        super(_filename);
+    public DungeonFileReader(String _folder, String _filename) {
+        super(_folder, _filename);
         this.loadedLevels = new HashMap<>();
     }
     
@@ -100,14 +99,14 @@ public class DungeonFileReader extends RawFileReader {
     
     public void load(String levelID) {
         if (!loadedLevels.containsKey(levelID)) {
-            String dirName = LevelGenerator.folder + levelID + File.separator;
+            String dirName = folder + levelID + File.separator;
             File dirFile = new File(dirName);
             if (dirFile.isDirectory()) {
                 File mapFile = new File(dirFile, "map_" + levelID + ".json");
                 System.out.print("Checking if " + levelID + " is valid... ");
                 if (mapFile.exists()) {
                     System.out.println("ok!");
-                    LevelFileReader levelReader = new LevelFileReader(mapFile.getPath());
+                    LevelFileReader levelReader = new LevelFileReader(mapFile.getParent(), mapFile.getName());
                     Level level = levelReader.parseJson();
                     loadedLevels.put(levelID, level);
                 } else {

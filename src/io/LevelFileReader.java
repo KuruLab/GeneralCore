@@ -33,8 +33,8 @@ import puzzle.Symbol;
  */
 public class LevelFileReader extends RawFileReader{
     
-    public LevelFileReader(String _filename){
-        super(_filename);
+    public LevelFileReader(String _folder, String _filename){
+        super(_folder, _filename);
     }
     
     public Level parseJson(){

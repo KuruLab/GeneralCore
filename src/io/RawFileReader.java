@@ -29,9 +29,11 @@ import java.util.logging.Logger;
  */
 public class RawFileReader {
     
+    protected String folder;
     protected String filename;
     
-    public RawFileReader(String _filename){
+    public RawFileReader(String _folder, String _filename){
+        this.folder = _folder;
         this.filename = _filename;
     }
     
@@ -41,7 +43,7 @@ public class RawFileReader {
         BufferedReader br = null;
         System.out.println("Reading \""+filename+"\"");
         try {
-            File file = new File(filename);
+            File file = new File(folder, filename);
             fr = new FileReader(file);
             br = new BufferedReader(fr);
             String line = new String();
@@ -65,5 +67,21 @@ public class RawFileReader {
             }
         }
         return jsonString;
+    }
+
+    public String getFolder() {
+        return folder;
+    }
+
+    public void setFolder(String folder) {
+        this.folder = folder;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }
