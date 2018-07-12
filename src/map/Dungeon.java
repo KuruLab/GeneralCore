@@ -16,7 +16,7 @@
  */
 package map;
 
-import engine.Tree;
+import util.Tree;
 import java.util.HashMap;
 import java.util.List;
 
