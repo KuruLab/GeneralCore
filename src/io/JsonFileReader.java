@@ -27,23 +27,38 @@ import java.util.logging.Logger;
  *
  * @author Kurumin
  */
-public class RawFileReader {
+public class JsonFileReader {
     
     protected String folder;
     protected String filename;
+    protected File file;
     
-    public RawFileReader(String _folder, String _filename){
+    public JsonFileReader(String _folder, String type, String _filename){
         this.folder = _folder;
         this.filename = _filename;
+        
+        File upperDir = new File(folder);
+        File lowerDir = new File(upperDir, filename);
+        String finalname = type + "_" + filename + ".json";
+        this.file = new File(lowerDir, finalname);
+    }
+    
+    public JsonFileReader(String _folder, String type, String _filename, String version){
+        this.folder = _folder;
+        this.filename = _filename;
+        
+        File upperDir = new File(folder);
+        File lowerDir = new File(upperDir, filename);
+        String finalname = type + "_" + filename + "_" + version + ".json";
+        this.file = new File(lowerDir, finalname);
     }
     
     protected String readRawString(){
         String jsonString = new String();
         FileReader fr = null;
         BufferedReader br = null;
-        System.out.println("Reading \""+filename+"\"");
+        System.out.println("Reading \""+file+"\"");
         try {
-            File file = new File(folder, filename);
             fr = new FileReader(file);
             br = new BufferedReader(fr);
             String line = new String();

@@ -250,7 +250,7 @@ public class Condition {
     public String toString() {
         String result = "";
         if (keyLevel == 0 && switchState == SwitchState.EITHER)
-            result += "0";
+            result += "";
         if (keyLevel != 0) {
             result += new Symbol(keyLevel).toString();
         }

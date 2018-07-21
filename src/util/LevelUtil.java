@@ -1,5 +1,6 @@
 package util;
 
+import config.GeneralConfig;
 import java.util.ArrayList;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -16,7 +17,33 @@ import org.graphstream.ui.geom.Point3;
  *
  * @author andre
  */
-public class LevelToolkit {
+public class LevelUtil {
+    
+    public static void trimLevel(Graph graph){
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        for(int i = 0; i < graph.getNodeCount(); i++){
+            Node node = graph.getNode(i);
+            Point3 a = nodePointPosition(node);
+            double nodex1 = a.x - ((double) node.getAttribute("width")) / 2;
+            double nodey1 = a.y - ((double) node.getAttribute("height")) / 2;
+            if(nodex1 < minX){
+                minX = (int) nodex1;
+            }
+            if(nodey1 < minY){
+                minY = (int) nodey1;
+            }
+        }
+        int x_diff = minX - GeneralConfig.borderSize;
+        int y_diff = minY - GeneralConfig.borderSize;
+        for(int i = 0; i < graph.getNodeCount(); i++){
+            Node node = graph.getNode(i);
+            Point3 a = nodePointPosition(node);
+            a.x -= x_diff;
+            a.y -= y_diff;
+            node.setAttribute("xyz", a.x, a.y, a.z);
+        }
+    }
     
     public static double nodeAreaOverlap(Graph graph) {
         double interSection = 0;
@@ -165,7 +192,7 @@ public class LevelToolkit {
     }
     
     // not working properly
-    public static int edgeOverlap(Graph graph){
+    /*public static int edgeOverlap(Graph graph){
         ArrayList<String> intersections = new ArrayList<>();
         for (int i = 0; i < graph.getEdgeCount(); i++) {
             // first edge
@@ -206,5 +233,5 @@ public class LevelToolkit {
         //System.out.println("Edge overlaps: "+overlaps);
         return intersections.size();
         //return 0;
-    }
+    }*/
 }

@@ -33,12 +33,12 @@ import org.json.simple.parser.ParseException;
  *
  * @author Kurumin
  */
-public class DungeonFileReader extends RawFileReader {
+public class DungeonFileReader extends JsonFileReader {
     
     private HashMap<String, Level> loadedLevels;
     
     public DungeonFileReader(String _folder, String _filename) {
-        super(_folder, _filename);
+        super(_folder, "dungeon", _filename);
         this.loadedLevels = new HashMap<>();
     }
     
@@ -107,7 +107,7 @@ public class DungeonFileReader extends RawFileReader {
                 if (mapFile.exists()) {
                     System.out.println("ok!");
                     LevelFileReader levelReader = new LevelFileReader(mapFile.getParent(), mapFile.getName());
-                    Level level = levelReader.parseJson();
+                    Level level = levelReader.parseJsonToLevel();
                     loadedLevels.put(levelID, level);
                 } else {
                     System.err.println("warning: " + levelID + " is not a valid folder.");

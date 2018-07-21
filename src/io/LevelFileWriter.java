@@ -20,26 +20,22 @@ import org.graphstream.graph.Edge;
  *
  * @author andre
  */
-public class LevelFileWriter {
+public class LevelFileWriter extends JsonFileWriter{
 
-    private String levelName;
-    private Graph graph;
-
-    public LevelFileWriter(Graph graph, String lvlName) {
-        this.graph = graph;
-        this.levelName = lvlName;
+    public LevelFileWriter(Graph graph, String folder, String filename) {
+        super(graph, folder, "level", filename);
     }
 
-    public void exportDataJSON(String filename, String generator, int width, int height, int border, boolean useHash) {
+    public void exportDataJSON(String generator, int width, int height, int border, boolean useHash) {
         /*{"border":5,"random_seed":false,"method":"random seed cellular automata","seed":"666","size":"128x64","wall_threshold":25,"room_threshold":75,"type":"cave","fill_percent":50,"smooth":5}*/
         try {
-            PrintWriter pw = new PrintWriter(filename);
+            PrintWriter pw = new PrintWriter(file);
             pw.printf("{%n");
             pw.printf("\"random_seed\": false,%n");
             if (useHash) {
                 pw.printf("\"seed\": %s,%n", graph.hashCode());
             } else {
-                pw.printf("\"seed\": \"%s\",%n", levelName);
+                pw.printf("\"seed\": \"%s\",%n", filename);
             }
             pw.printf("\"type\": \"evo-dungeon\",%n");
             pw.printf("\"method\": \"%s\",%n", generator);
@@ -57,19 +53,22 @@ public class LevelFileWriter {
         }
     }
 
-    public void exportMapJSON(String filename, String generator, boolean useHash) {
+    public void exportMapJSON(String generator, int width, int height, int border, boolean useHash) {
         Hashtable coordHash = parseCoordsToID(graph);
         try {
-            PrintWriter pw = new PrintWriter(filename);
+            PrintWriter pw = new PrintWriter(file);
             pw.printf("{%n");
             if (useHash) {
                 pw.printf("\"graph\": \"%s\",%n", graph.hashCode());
             } else {
-                pw.printf("\"graph\": \"%s\",%n", levelName);
+                pw.printf("\"graph\": \"%s\",%n", filename);
             }
             pw.printf("\"generator\": \"%s\",%n", generator);
+            pw.printf("\"runtime\": %s,%n", (long) graph.getAttribute("runtime"));
             pw.printf("\"ui.antialias\": %s,%n", true);
             pw.printf("\"ui.quality\": %s,%n", true);
+            pw.printf("\"size\": \"%sx%s\",%n", width, height);
+            pw.printf("\"border\": %s, %n", border);
             //pw.printf("\"ui.stylesheet\": \"%s\",%n", "url('media/stylesheet.css')");
             pw.printf("\"nodes\": [%n");
             for (int i = 0; i < graph.getNodeCount(); i++) {
@@ -80,10 +79,11 @@ public class LevelFileWriter {
                 pw.printf("\t\t\"position\": %s,%n", Arrays.toString(xyz));
                 pw.printf("\t\t\"width\": %.1f,%n", (double) node.getAttribute("width"));
                 pw.printf("\t\t\"height\": %.1f,%n", (double) node.getAttribute("height"));
+                pw.printf("\t\t\"length\": %.1f,%n", 0.0);
                 pw.printf("\t\t\"degree\": %s,%n", node.getDegree());
-                pw.printf("\t\t\"intensity\": %.6f,%n", (double) node.getAttribute("ui.color"));
-                pw.printf("\t\t\"symbol\": \"%s\",%n", node.getAttribute("symbol").toString());
-                pw.printf("\t\t\"condition\": \"%s\"%n", node.getAttribute("condition").toString());
+                //pw.printf("\t\t\"intensity\": %.6f,%n", (double) node.getAttribute("ui.color"));
+                //pw.printf("\t\t\"symbol\": \"%s\",%n", node.getAttribute("symbol").toString());
+                //pw.printf("\t\t\"condition\": \"%s\"%n", node.getAttribute("condition").toString());
                 pw.printf("\t}");
                 if (i != graph.getNodeCount() - 1) {
                     pw.printf(",");
@@ -101,7 +101,7 @@ public class LevelFileWriter {
                 pw.printf("\t\t\"id\": \"%s\",%n", id);
                 pw.printf("\t\t\"a\": \"%s\",%n", coordHash.get(coord1));
                 pw.printf("\t\t\"b\": \"%s\",%n", coordHash.get(coord2));
-                pw.printf("\t\t\"symbol\": \"%s\"%n", edge.getAttribute("symbol").toString());
+                //pw.printf("\t\t\"symbol\": \"%s\"%n", edge.getAttribute("symbol").toString());
                 pw.printf("\t}");
                 if (i != graph.getEdgeCount() - 1) {
                     pw.printf(",");
@@ -115,19 +115,5 @@ public class LevelFileWriter {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LevelFileWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    public Hashtable<String, Integer> parseCoordsToID(Graph graph) {
-        Hashtable<String, Integer> hash = new Hashtable<>();
-        for (int i = 0; i < graph.getNodeCount(); i++) {
-            Integer id = new Integer(i);
-            String coord = graph.getNode(i).getId();
-            if (hash.containsKey(coord)) {
-                System.out.println("Error: hash already contains coord " + coord);
-            } else {
-                hash.put(coord, id);
-            }
-        }
-        return hash;
     }
 }
